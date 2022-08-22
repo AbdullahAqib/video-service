@@ -1,0 +1,19 @@
+spring:
+  data:
+    mongodb:
+      database: videos
+      port: 27017
+  application:
+    name: video-service
+  servlet:
+    multipart:
+      max-file-size: 4096MB
+      max-request-size: 4096MB
+      enabled: true
+
+server:
+  port: 9100
+
+itachay:
+  clientApp:
+    name: video-service
