@@ -6,11 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,12 +28,18 @@ public class VideoResource {
 
     private final VideoService videoService;
 
-    @PostMapping(path = "/video")
-    public ResponseEntity<String> uploadCourseVideo(@RequestParam("file") MultipartFile file) throws IOException, URISyntaxException {
-        String fileId = videoService.uploadVideo(file);
-        return ResponseEntity.created(new URI("/api/files/" + fileId))
-                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, fileId))
-                .body(fileId);
+    @PostMapping(path = "/videos")
+    public ResponseEntity<String> uploadVideo(@RequestParam("file") MultipartFile file) throws IOException, URISyntaxException {
+        String id = videoService.uploadVideo(file);
+        return ResponseEntity.created(new URI("/api/videos/" + id))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, id))
+                .body(id);
+    }
+
+    @DeleteMapping(path = "/videos/{id}")
+    public ResponseEntity deleteVideo(@PathVariable String id) {
+        videoService.deleteVideo(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }
