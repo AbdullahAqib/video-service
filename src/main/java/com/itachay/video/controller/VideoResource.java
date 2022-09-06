@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,6 +36,11 @@ public class VideoResource {
         return ResponseEntity.created(new URI("/api/videos/" + id))
                 .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, id))
                 .body(id);
+    }
+
+    @GetMapping(value = "/stream/{id}", produces = "video/mp4")
+    public Mono<Resource> getStream(@PathVariable String id) {
+        return videoService.getStream(id);
     }
 
     @DeleteMapping(path = "/videos/{id}")
